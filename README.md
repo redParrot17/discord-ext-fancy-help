@@ -1,6 +1,13 @@
 # Embedded Help Menu for discord.py Bots
 A custom implementation of the default discord.py help menu that uses formatted embeds.
 
+## Notable Features
+
+- Character and field limits for Discord's embeds are taken into consideration when constructing the response.
+- Cog lookups are case insensitive resulting in reduced frustration among your users.
+- Gracefully handles situations where a command and cog have the same name.
+    - The cog will be used for the initial invocation and the command will be used for any repeated invocations within 15 seconds.
+
 ## Customization
 This implementation provides several forms of customization to tweak the look of the help menu.
 
