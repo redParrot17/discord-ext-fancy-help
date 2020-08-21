@@ -29,7 +29,7 @@ from datetime import datetime, timedelta
 from discord import utils, Embed, Color
 
 # Needed for the setup.py script
-__version__ = '1.0.0-a'
+__version__ = '1.0.1-a'
 
 _help_invocations = {}
 
@@ -124,56 +124,29 @@ class EmbeddedHelpCommand(commands.HelpCommand):
         return text
 
     @staticmethod
-    def split_text_to_lengths(text, length, separator=' '):
-        if not text:
-            return []
-        all_strings = []
-        current_string = []
-        sep_size = len(separator)
-        all_words = text.split(separator)
-        current_size = 0
-
-        def append_separator():
-            nonlocal current_size
-            current_size += sep_size
-            if current_size > length:
-                new_string = separator.join(current_string)
-                all_strings.append(new_string)
-                current_string.clear()
-                current_size = 0
-
-        def append_big_word(_word):
-            nonlocal current_size
-            while len(_word) > length:
-                all_strings.append(_word[:length])
-                _word = _word[length:]
-            if word:
-                current_string.append(_word)
-                current_size = len(_word)
-                append_separator()
-
-        while all_words:
-            word = all_words.pop(0)
-            word_size = len(word)
-            if current_size + word_size <= length:
-                current_size += word_size
-                current_string.append(word)
-                append_separator()
-            elif current_size:
-                all_strings.append(separator.join(current_string))
-                current_size = 0
-                current_string.clear()
-                if word_size <= length:
-                    current_size = word_size
-                    current_string.append(word)
-                    append_separator()
-                else:
-                    append_big_word(word)
+    def split_to_max_length(string, length, separator):
+        sep_length = len(separator)
+        collection_length = 0
+        collection = []
+        for sub_string in string.split(separator):
+            while sub_string:
+                sub_sub_string = sub_string[:length]
+                sub_sub_string_length = len(sub_sub_string)
+                if collection_length + sub_sub_string_length > length:
+                    yield ''.join(collection).rstrip(separator)
+                    collection_length = 0
+                    collection.clear()
+                collection_length += sub_sub_string_length
+                collection.append(sub_sub_string)
+                sub_string = sub_string[length:]
+            if collection_length + sep_length > length:
+                yield ''.join(collection).rstrip(separator)
+                collection_length = 0
+                collection.clear()
             else:
-                append_big_word(word)
-        if current_size:
-            all_strings.append(separator.join(current_string))
-        return all_strings
+                collection_length += sep_length
+                collection.append(separator)
+        yield ''.join(collection).rstrip(separator)
 
     def build_embeds(self, title: str, description: str, fields: list):
         """A utility function to put the values into embeds without exceeding embed limits.
@@ -198,7 +171,7 @@ class EmbeddedHelpCommand(commands.HelpCommand):
         embed = Embed(title=title, color=self.color)
 
         # Attach the description to the embed.
-        descriptions = self.split_text_to_lengths(description, 2048)
+        descriptions = list(self.split_to_max_length(description, 2048, ' '))
         if len(descriptions) == 1:
             embed.description = descriptions[0]
         elif descriptions:
@@ -211,7 +184,7 @@ class EmbeddedHelpCommand(commands.HelpCommand):
         for field_name, field_value in fields:
             field_name = self.shorten_text(field_name, 256)
             field_name_length = len(field_name)
-            field_values = self.split_text_to_lengths(field_value, 1024, '\n')
+            field_values = self.split_to_max_length(field_value, 1024, '\n')
 
             for value in field_values:
                 field_length = len(value) + field_name_length
