@@ -1,6 +1,14 @@
 # Embedded Help Menu for discord.py Bots
 A custom implementation of the default discord.py help menu that uses formatted embeds.
 
+## Installing
+
+Installing is done purely via git:
+
+```py
+python -m pip install -U git+https://github.com/redParrot17/discord-ext-fancy-help
+```
+
 ## Notable Features
 
 - Character and field limits for Discord's embeds are taken into consideration when constructing the response.
