@@ -29,7 +29,7 @@ from datetime import datetime, timedelta
 from discord import utils, Embed, Color
 
 # Needed for the setup.py script
-__version__ = '1.0.1-a'
+__version__ = '1.0.2-a'
 
 _help_invocations = {}
 
@@ -171,14 +171,15 @@ class EmbeddedHelpCommand(commands.HelpCommand):
         embed = Embed(title=title, color=self.color)
 
         # Attach the description to the embed.
-        descriptions = list(self.split_to_max_length(description, 2048, ' '))
-        if len(descriptions) == 1:
-            embed.description = descriptions[0]
-        elif descriptions:
-            for description in descriptions:
-                embed.description = description
-                embeds.append(embed)
-                embed = Embed(color=self.color)
+        if description:
+            descriptions = list(self.split_to_max_length(description, 2048, ' '))
+            if len(descriptions) == 1:
+                embed.description = descriptions[0]
+            elif descriptions:
+                for description in descriptions:
+                    embed.description = description
+                    embeds.append(embed)
+                    embed = Embed(color=self.color)
 
         # Attach the fields to the embed.
         for field_name, field_value in fields:
