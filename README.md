@@ -21,10 +21,10 @@ This implementation provides several forms of customization to tweak the look of
 
 You can edit these values via the kwargs of the menu's \_\_init\_\_ constructor.
 ```py
-from fancyhelp import EmbeddedHelpCommand
+from discord.ext import fancyhelp
 from discord import Color
 
-menu = EmbeddedHelpCommand(
+menu = fancyhelp.EmbeddedHelpCommand(
     color=Color.dark_red(),
     sort_commands=True,
     dm_help=None
