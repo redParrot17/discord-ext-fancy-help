@@ -35,19 +35,19 @@ menu = EmbeddedHelpCommand(
 
 #### As a direct replacement with custom color
 ```py
-from fancyhelp import EmbeddedHelpCommand
+from discord.ext import fancyhelp
 from discord.ext.commands import Bot
 
 
 client = Bot(
     command_prefix='.',
-    help_command=EmbeddedHelpCommand(color=0x73D3B3)
+    help_command=fancyhelp.EmbeddedHelpCommand(color=0x73D3B3)
 )
 ```
 
 #### As a loadable Cog
 ```py
-from fancyhelp import EmbeddedHelpCommand
+from discord.ext import fancyhelp
 from discord.ext.commands import Cog
 
 
@@ -59,7 +59,7 @@ class Help(Cog):
         self._original_help_command = bot.help_command
 
         # Replaces the default help command with our new one.
-        bot.help_command = EmbeddedHelpCommand()
+        bot.help_command = fancyhelp.EmbeddedHelpCommand()
         bot.help_command.cog = self
         self.bot = bot
 
