@@ -212,7 +212,7 @@ class EmbeddedHelpCommand(commands.HelpCommand):
             return ctx.channel
 
     async def command_not_found(self, string):
-        channel = await self.get_destination()
+        channel = self.get_destination()
         if channel is not None:
             string = f'No command called "{string}" found.'
             await channel.send(embed=Embed(color=Color.red(), description=string))
@@ -220,7 +220,7 @@ class EmbeddedHelpCommand(commands.HelpCommand):
     async def subcommand_not_found(self, command, string):
         if isinstance(command, commands.Group):
             return await self.context.send_help(command)
-        channel = await self.get_destination()
+        channel = self.get_destination()
         if channel is not None:
             string = f'Command "{command.name}" has no sub-commands.'
             await channel.send(embed=Embed(color=Color.red(), description=string))
