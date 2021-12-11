@@ -285,7 +285,7 @@ class EmbeddedHelpCommand(commands.HelpCommand):
             field_value = '\n'.join(lines)
             fields.append((field_name, field_value))
 
-        fields.append(('Signature', f'```\n{self.clean_prefix}{group_name} {group.signature}\n```'))
+        fields.append(('Signature', f'```\n{self.context.clean_prefix}{group_name} {group.signature}\n```'))
         if group.aliases:
             fields.append(('Aliases', f"```\n{', '.join(group.aliases)}\n```"))
 
@@ -297,7 +297,7 @@ class EmbeddedHelpCommand(commands.HelpCommand):
         command_name = f'{parent_name} {command.name}' if parent_name else command.name
         title = 'Help > ' + ' > '.join(command_name.title().split(' '))
         description = command.help or command.description or command.brief
-        fields = [('Signature', f'```\n{self.clean_prefix}{command_name} {command.signature}\n```')]
+        fields = [('Signature', f'```\n{self.context.clean_prefix}{command_name} {command.signature}\n```')]
 
         if command.aliases:
             fields.append(('Aliases', f"```\n{', '.join(command.aliases)}\n```"))
